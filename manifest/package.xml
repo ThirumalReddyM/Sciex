@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+		<members>ReturnOrderHandler</members>
+		<members>ReturnOrderHandlerTest</members>
+		<name>ApexClass</name>
+	</types>
+	<types>
+		<members>CreateReturnOrder</members>
+		<members>ModalCloseEvent</members>
+		<members>ReturnOrderEvent</members>
+		<members>ReturnOrderLinesComponent</members>
+		<members>ReturnOrderParentComponent</members>
+		<members>ReturnOrderSubmitEvent</members>
+		<members>TableChild</members>
+		<members>TableEvent</members>
+		<name>AuraDefinitionBundle</name>
+	</types>
+	<types>
+		<members>Country_Mapping__c.Return_Location__c</members>
+		<name>CustomField</name>
+	</types>
+	<types>
+		<members>Work_Order_Record_Page</members>
+		<name>FlexiPage</name>
+	</types>
+	<types>
+		<members>Service_Contract_on_Service_Request_Case</members>
+		<name>Flow</name>
+	</types>
+	<types>
+		<members>Country_Mapping__c-Account Mapping Layout</members>
+		<members>Location-FSL Location Layout</members>
+		<members>WorkOrder-FSL Work Order Layout</members>
+		<name>Layout</name>
+	</types>
+	<types>
+		<members>WorkOrder.Create_Return_Order</members>
+		<name>QuickAction</name>
+	</types>
+	<version>53.0</version>
+</Package>
