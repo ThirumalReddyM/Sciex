@@ -52,18 +52,18 @@
                             <td style="font-weight: bold">
                                 <lightning:formattedNumber value="{!rec.index}"/>.
                             </td>
-                            <lightning:input type="text" variant="label-hidden" title="{!rec.index}" style="display:none" label="" aura:id="Product" name="Product" value="{!rec.Product2Id}" disabled="true"/>
+                            <lightning:input type="text" variant="label-hidden" title="{!rec.index}" style="display:none" label="" aura:id="productNameField" name="Product" value="{!rec.Product2Id}" disabled="true"/>
 
                             <td>
-                                <lightning:input type="search" variant="label-hidden" title="{!rec.index}" label="" aura:id="Product" name="Product" value="{!rec.Product2Name}" onfocus="{!c.openProduct}" required="true" placeholder="Search Products"/>
+                                <lightning:input type="search" variant="label-hidden" title="{!rec.index}" label="" aura:id="Product" name="Product" value="{!rec.Product2Name}" onfocus="{!c.openProduct}" placeholder="Search Products"/>
                             </td>
                             <td>
-                                <lightning:input type="text" variant="label-hidden" label="" aura:id="QuantityExpected" name="Expected Qty" value="{!rec.QuantityReturned}" required="true"/>
+                                <lightning:input type="number" variant="label-hidden" label="" aura:id="QuantityExpected" name="Expected Qty" value="{!rec.QuantityReturned}" min="1" required="true" messageWhenRangeUnderflow="Quantity cannot be less than 1"/>
                             </td>
                             <td>
                                 <lightning:input type="text" variant="label-hidden" title="{!rec.index}" style="display:none" label="" aura:id="Product" name="Product" value="{!rec.SVC_Stocked_Serial__c}" disabled="true"/>
 
-                                <lightning:input type="search" variant="label-hidden" label="" aura:id="StockedSerial" name="Stocked Serial" value="{!rec.SVC_Stocked_SerialName__c}" title="{!rec.index}" onfocus="{!c.openStockedSerial}" required="true" placeholder="Search Stocked Serials"/>
+                                <lightning:input type="search" variant="label-hidden" label="" aura:id="StockedSerial" name="Stocked Serial" value="{!rec.SVC_Stocked_SerialName__c}" title="{!rec.index}" onfocus="{!c.openStockedSerial}" placeholder="Search Stocked Serials"/>
                             </td>
                             
                             <td>

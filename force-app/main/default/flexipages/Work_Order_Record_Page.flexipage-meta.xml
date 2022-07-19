@@ -48,7 +48,28 @@
                             <value>WorkOrder.WO_Notes</value>
                         </valueListItems>
                         <valueListItems>
-                            <value>WorkOrder.Create_Return_Order</value>
+                            <value>WorkOrder.Create_Product_Request</value>
+                        </valueListItems>
+                        <valueListItems>
+                            <value>WorkOrder.FSE_Debrief</value>
+                            <visibilityRule>
+                                <booleanFilter>1 AND 2 AND 3</booleanFilter>
+                                <criteria>
+                                    <leftValue>{!Record.Status}</leftValue>
+                                    <operator>NE</operator>
+                                    <rightValue>Completed</rightValue>
+                                </criteria>
+                                <criteria>
+                                    <leftValue>{!Record.Status}</leftValue>
+                                    <operator>NE</operator>
+                                    <rightValue>Canceled</rightValue>
+                                </criteria>
+                                <criteria>
+                                    <leftValue>{!Record.Status}</leftValue>
+                                    <operator>NE</operator>
+                                    <rightValue>ADMN Review</rightValue>
+                                </criteria>
+                            </visibilityRule>
                         </valueListItems>
                     </valueList>
                 </componentInstanceProperties>

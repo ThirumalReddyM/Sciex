@@ -11,9 +11,6 @@ public class ReturnOrderHandler {
         
         List<SObject> sObjectList = Database.query(Query);
         return sObjectList;
-        /*List<SObject> objRecords =  [Select Id, Name, Service_Resource__c, SVC_My_Trunk_Stock_Location__c,  Service_Resource__r.Name, FS_City__c, FS_State__c, FS_Country__c from Location where SVC_My_Trunk_Stock_Location__c = 1 LIMIT 1000];
-        
-        return objRecords;*/
     }
 
     @AuraEnabled
@@ -28,9 +25,6 @@ public class ReturnOrderHandler {
         
         List<SObject> sObjectList = Database.query(Query);
         return sObjectList;
-        /* List<SObject> objRecords =  [Select Id, Name, ProductCode, Family, FS_Product_Line__c, SVC_OrclEHSDocofDeconReq__c,Manufacturer__c, FS_Unit_Of_Measure__c from Product2 LIMIT 30];
-
-			return objRecords;*/
     }
     @AuraEnabled
     public static List<sObject> fetchStockedSerials(string searchParam) {
@@ -44,15 +38,18 @@ public class ReturnOrderHandler {
         
         List<SObject> sObjectList = Database.query(Query);
         return sObjectList;
-        /*List<SObject> objRecords = [Select Id, Name, FS_Product__c, FS_Product_Item__r.ProductName, FS_Product_Item__c, 
-FS_Product_Item__r.ProductItemNumber,SVC_OrclLotNumber__c from FS_Product_Serial__c where SVC_OrclLotNumber__c = null LIMIT 30];
-return objRecords;*/
     }
     @AuraEnabled
     public static void insertReturnLines(String jsonOfListOfReturnLines,Id parentRecId, Id destinationLocation, Id sourceLocation) {
         ReturnOrder RO = [Select Id, SourceLocationId, DestinationLocationId, FS_Service_Order__c from ReturnOrder where Id =: parentRecId];
-        RO.DestinationLocationId = destinationLocation;
+        WorkOrder WO = [Select Id, WorkOrderNumber, CaseId from WorkOrder where Id =: RO.FS_Service_Order__c];
+        RecordType returnOrderRecType = [SELECT Id,Name, DeveloperName FROM RecordType WHERE SobjectType='ReturnOrder' and DeveloperName ='Return_Order'];
+        //updating Return Order
+        RO.RecordTypeId = returnOrderRecType.Id;
+        RO.SourceLocationId = sourceLocation;
+        RO.CaseId = WO.CaseId;
         Update RO;
+        
         List<ReturnOrderLineItem> listOfReturnLines = (List<ReturnOrderLineItem>) JSON.deserialize(jsonOfListOfReturnLines, List<ReturnOrderLineItem>.class);
         System.debug('Inserting '+listOfReturnLines);
         for(Integer counter=0;counter<listOfReturnLines.size();counter++){

@@ -13,33 +13,36 @@
         ]; 
         component.set("v.productcols",productcolumns);
         var stockedcolumns = [
-            {'label': 'Product Id', 'fieldName': 'FS_Product__c', 'type': 'text', 'sortable' : true},
+            
             {'label': 'Product Name', 'fieldName': 'FS_ProductName', 'type': 'text', 'sortable' : true},
             {'label': 'Product Item', 'fieldName': 'FS_Product_Item__c', 'type': 'text', 'sortable' : true},
             {'label': 'Serial Number','fieldName': 'Name', 'type': 'text', 'sortable' : true},
         ]; 
-        component.set("v.stockedSerialcols",stockedcolumns);
+            component.set("v.stockedSerialcols",stockedcolumns);
             var action1 = component.get("c.fetchProducts");
             action1.setCallback(this, function(response) {
-            	let state = response.getState();
-            	console.log(state)
-            	if (state === "SUCCESS"){
-            		let result = response.getReturnValue(); 
-            		console.log('Response -> ', JSON.stringify(result)); 
-            		component.set("v.productrows", result);
-            		component.set("v.productoriginalData", result);
+            let state = response.getState();
+            console.log(state)
+            if (state === "SUCCESS"){
+            let result = response.getReturnValue(); 
+            console.log('Response -> ', JSON.stringify(result)); 
+            component.set("v.productrows", result);
+            component.set("v.productoriginalData", result);
             var action2 = component.get("c.fetchStockedSerials");
             action2.setCallback(this, function(response) {
-            	let state = response.getState();
-            	if (state === "SUCCESS"){
-            		let result = response.getReturnValue(); 
+            let state = response.getState();
+            if (state === "SUCCESS"){
+            let result = response.getReturnValue(); 
             console.log('Response -> ', JSON.stringify(result)); 
             result.forEach(element=>{
             if (element.FS_Product__r.Name){ element.FS_ProductName = element.FS_Product__r.Name;}
             })
-                    console.log('Response -> ', JSON.stringify(result)); 
-					component.set("v.stockedSerialrows", result);
-            		component.set("v.stockedSerialoriginalData", result);
+             result.forEach(element=>{
+            if (element.FS_Product_Item__c){ element.FS_Product_Item__c = element.FS_Product_Item__r.ProductItemNumber;}
+            })
+            console.log('Response -> ', JSON.stringify(result)); 
+            component.set("v.stockedSerialrows", result);
+            component.set("v.stockedSerialoriginalData", result);
             }
             });
             $A.enqueueAction(action2);
@@ -147,49 +150,65 @@
             component.set("v.stockedSerialloaded",false);   
         }
         component.set("v.listOfReturnLines",resultArr);
-
-               console.log(JSON.stringify(component.get("v.listOfReturnLines")));
-
-
+        
+        console.log(JSON.stringify(component.get("v.listOfReturnLines")));
+        
+        
         //let lengthLs= component.get("v.listOfReturnLines").length;
         //if(lengthLs!=indexVal){
         //    indexVal=indexVal-1;
         //}
         
         
-       // component.find("Product").set("v.value",event.getParam("selectedRowName"));
+        // component.find("Product").set("v.value",event.getParam("selectedRowName"));
         //component.find("Product").set("v.value",event.getParam("selectedRowName"));
     },
-     handleCloseModal: function(component,event){
+    handleCloseModal: function(component,event){
         component.set("v.productloaded",false);
         component.set("v.stockedSerialloaded",false);
     },
     
     createReturnLines: function(component, event, helper) {
-       console.log(JSON.stringify(component.get("v.listOfReturnLines")));
-        var evt = component.getEvent("ReturnOrderSubmitEvent");
-        evt.setParams({
-            "returnWorkOrderLineItems":component.get("v.listOfReturnLines")
-        }).fire();
-        helper.createRow(component, []);
-
-        /*
-        let action = component.get("c.insertReturnLines");
-        action.setParams({
-            "jsonOfListOfReturnLines": JSON.stringify(component.get("v.listOfReturnLines"))
-        });
-        action.setCallback(this, function(response) {
-            let listOfReturnLines = [];
-            helper.createRow(component, listOfReturnLines);
+        var validationPassForQuantity = helper.validateLines(component, "QuantityExpected");
+        console.log('validationPassForQuantity::', validationPassForQuantity);
+        var validationPassForProduct = helper.validateLines(component, "productNameField");
+        console.log('validationPassForProduct::', validationPassForProduct);
+        var showValidationError = false;
+        var vaildationFailReason = '';
+        if(!validationPassForQuantity) {
             const toastEvent = $A.get("e.force:showToast");
             toastEvent.setParams({
-                message: "Return Order Line Items successfully created!",
-                type: "success",
-                duration: '2000',
+                title: "Invalid data",
+                message: "Quantity cannot be less than 1!",
+                type: "error",
+                duration:' 2000',
             });
             toastEvent.fire();
-        });
-        $A.enqueueAction(action);
-        */
+        }else if(!validationPassForProduct){
+             const toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: "Required Field Missing",
+                message: "Product cannot be empty for the creation of Return Order Line Item!",
+                type: "error",
+                duration:' 2000',
+            });
+            toastEvent.fire();
+        }else if(!validationPassForQuantity || !validationPassForProduct){
+           const toastEvent = $A.get("e.force:showToast");
+            toastEvent.setParams({
+                title: "Required Field Missing",
+                message: "Product cannot be empty or Quantity cannot be less than 1!",
+                type: "error",
+                duration:' 2000',
+            });
+            toastEvent.fire();
+        }else if(validationPassForQuantity && validationPassForProduct) {
+            console.log(JSON.stringify(component.get("v.listOfReturnLines")));
+            var evt = component.getEvent("ReturnOrderSubmitEvent");
+            evt.setParams({
+                "returnWorkOrderLineItems":component.get("v.listOfReturnLines")
+            }).fire();
+            helper.createRow(component, []);
+        }
     }
 });

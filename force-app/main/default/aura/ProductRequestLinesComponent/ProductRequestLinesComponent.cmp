@@ -1,0 +1,66 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" controller="ProductRequestHandler" access="global">
+    
+    <aura:attribute name="listOfRequestLines" type="List" default="[]"/>
+    
+    <aura:attribute name="productrows" type="Object" default=""/>
+    <aura:attribute name="productcols" type="List" default=""/>
+    <aura:attribute name="productoriginalData" type="Object" default=""/>
+    <aura:attribute name="productloaded" type="Boolean" default="false"/>
+    <aura:attribute name="productcurrentIndex" type="Integer"/>
+    
+    <aura:attribute name="searchedParam" type="String"/>
+    <aura:attribute name="objectName" type="String"/>
+    
+    <aura:handler name="SelectRow" event="c:TableEvent" action="{!c.handleSelect}"/>
+    <aura:handler name="SearchEvent" event="c:ReturnOrderEvent" action="{!c.handleSearch}"/>
+    <aura:handler name="CloseModal" event="c:ModalCloseEvent" action="{!c.handleCloseModal}"/>
+    <aura:registerEvent name="ProductRequestSubmitEvent" type="c:ProductRequestSubmitEvent"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <div>
+        <div style="padding: 0.50rem 1rem;">
+            <lightning:button variant="brand" label="Save" title="Save" iconName="utility:save" onclick="{!c.createReturnLines}"/>
+        </div>
+        <lightning:card title="Product Request Line Items" iconName="standard:product_request_line_item">
+            <aura:set attribute="actions">
+                <lightning:button variant="neutral" label="Add row" title="Add row" iconName="utility:add" onclick="{!c.addNewRow}"/> 
+            </aura:set>
+            <!-- Table -->
+            <table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid">
+                <thead>
+                    <tr>
+                        <th scope="col" height="22" style="width: 3rem">No.</th>
+                        <th scope="col" height="22">Products</th>
+                        <th scope="col" height="22">Expected Qty</th>
+                        <th scope="col" height="22" style="width: 3rem"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.listOfRequestLines}" var="rec">
+                        <tr class="slds-hint-parent">
+                            <td style="font-weight: bold">
+                                <lightning:formattedNumber aura:id="{!rec.index}" value="{!rec.index}"/>.
+                            </td>
+                            <lightning:input type="text" variant="label-hidden" title="{!rec.index}" style="display:none" label="" aura:id="Product" name="Product" value="{!rec.Product2Id}" disabled="true"/>
+
+                            <td>
+                                <lightning:input type="search" variant="label-hidden" title="{!rec.index}" label="" aura:id="productNameField" name="Product" value="{!rec.Product2Name}" onclick="{!c.openProduct}" placeholder="Search Products"/>
+                            </td>
+                            <td>
+                                <lightning:input variant="label-hidden" label="" aura:id="quantityField" name="Expected Qty" value="{!rec.QuantityReturned}" type="number" min="1" required="true" messageWhenRangeUnderflow="Quantity cannot be less than 1"/>
+                            </td>
+                            <td>
+                                <lightning:buttonIcon iconName="utility:delete" alternativeText="Remove" title="Remove" name="{!rec.index}" onclick="{!c.removeRow}"/>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                </tbody>
+            </table>
+           
+        </lightning:card>
+    </div>
+    <aura:if isTrue="{!v.productloaded}">
+        <c:TableChild rows="{!v.productrows}" cols="{!v.productcols}" originalData="{!v.productoriginalData}" objectName="{!v.objectName}" indexProd="{!v.productcurrentIndex}"/>
+    </aura:if>
+</aura:component>

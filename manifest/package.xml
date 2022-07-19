@@ -6,12 +6,19 @@
 		<name>ApexClass</name>
 	</types>
 	<types>
+		<members>CreateProductRequest</members>
 		<members>CreateReturnOrder</members>
 		<members>ModalCloseEvent</members>
+		<members>ModalClosedEvent</members>
+		<members>ProductRequestLinesComponent</members>
+		<members>ProductRequestParentComponent</members>
+		<members>ProductRequestSubmitEvent</members>
+		<members>RemoveRowEvent</members>
 		<members>ReturnOrderEvent</members>
 		<members>ReturnOrderLinesComponent</members>
 		<members>ReturnOrderParentComponent</members>
 		<members>ReturnOrderSubmitEvent</members>
+		<members>SelectedRowEvent</members>
 		<members>TableChild</members>
 		<members>TableEvent</members>
 		<name>AuraDefinitionBundle</name>

@@ -16,7 +16,7 @@
     <aura:attribute name="searchedParam" type="String"/>
     <aura:attribute name="returnOrderLineItemDetails" type="String"/>
     <aura:attribute name="selectedLocation" type="String"/>
-    <aura:attribute name="selectedLocationIdVal" type="String"/>
+    <aura:attribute name="selectedLocationName" type="String"/>
 
     <aura:handler name="ReturnOrderSubmitEvent" event="c:ReturnOrderSubmitEvent" action="{!c.handleOnSubmit}"/>
 
@@ -47,14 +47,14 @@
     
     <!-- <aura:handler name="LookupEvent" event="c:CustomLookupEvent" action="{!c.parentComponentEvent}"/> -->
     
-    <div class="slds-m-around--xx-large">  
-        <div class="slds-p-around_medium"> 
+        <div class="slds-p-around_xxx-small"> 
             <lightning:card title="Return Order" iconName="standard:return_order">
             <lightning:recordEditForm aura:id="ReturnOrderCreateForm" 
                                       objectApiName="ReturnOrder"
                                       onsubmit="{!c.handleOnSubmit}"
-                                      onsuccess="{!c.handleOnSuccess}">
-                <lightning:messages />
+                                      onsuccess="{!c.handleOnSuccess}"
+                					  onerror="{!c.handleError}">
+                <lightning:messages aura:id="ReturnOrderMessage"/>
                 <div class="slds-grid">
                     <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
                         <lightning:inputField aura:id="field"  fieldName="FS_RMA_Type__c" required="true"></lightning:inputField>
@@ -75,7 +75,7 @@
                 
                 <div class="slds-grid">
                     <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
-                        <lightning:inputField aura:id="sourceLocation" fieldName="SourceLocationId" value="{!v.recordFields.Location.Country_Mapping__r.Return_Location__c}" disabled="true"></lightning:inputField>
+                        <lightning:inputField aura:id="destinationLocation" fieldName="DestinationLocationId" value="{!v.recordFields.Location.Country_Mapping__r.Return_Location__c}" disabled="true"></lightning:inputField>
                     </div>
                    <!-- <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
                         <lightning:input type="search" variant="label-inline" aura:id="locationInput" label="Destination Location" name="Destination Location" onfocus="{!c.openLocation}" value="{!v.selectedLocationIdVal}" />
@@ -91,7 +91,7 @@
                 <!--lightning:button label="Save" type="submit" variant="brand"/ -->
             </lightning:recordEditForm>
                 <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
-                        <lightning:input type="search" variant="label-inline" aura:id="locationInput" label="Destination Location" name="Destination Location" onfocus="{!c.openLocation}" value="{!v.selectedLocationIdVal}" />
+                        <lightning:input type="search" variant="label-inline" aura:id="locationInput" label="Source Location" name="Source Location" onfocus="{!c.openLocation}" value="{!v.selectedLocationName}"/>
                 </div>
                  <c:ReturnOrderLinesComponent/>
             </lightning:card>
@@ -101,5 +101,4 @@
             
            <!-- <c:ReturnOrderLinesComponent/> -->
         </div>
-    </div>
 </aura:component>
